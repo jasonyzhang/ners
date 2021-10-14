@@ -1,0 +1,115 @@
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="./resources/style.css" media="screen" />
+<link rel="icon" type="image/x-icon" href="./resources/ri-favicon.ico">
+
+<html lang="en">
+
+<head>
+    <title>NeRS</title>
+    <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/
+        if you update and want to force Facebook to re-scrape. -->
+    <meta property="og:image" content="Path to my teaser.png" />
+    <meta property="og:title"
+        content="NeRS: Neural Reflectance Surfaces for Sparse-View 3D Reconstruction in the Wild" />
+    <meta property="og:description"
+        content="Given in-the-wild multiview images, noisy cameras, and a rough shape initialization, we recover the shape deformation, texture, and illumination." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97476543-1"
+        type="55bb8c55d1f644fceeea9b5a-text/javascript"></script>
+    <script type="55bb8c55d1f644fceeea9b5a-text/javascript">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-97476543-1');
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div id="top" class="title">
+            NeRS Data (Coming Soon)
+        </div>
+
+        <br><br>
+
+        <p>
+            MVMC data and self-captures will be available soon. In the meantime, explore
+            some of the generated meshes!
+        </p>
+
+        <div class="mesh-container">
+            <!-- <div class="mesh">
+                <img src="resources/images/espresso.png">
+            </div> -->
+            <div class="mesh">
+
+                <model-viewer src="./resources/meshes/espresso.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral"
+                    camera-orbit="180deg 75deg 105%" auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/monitor.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral"
+                    camera-orbit="180deg 75deg 105%" auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+        </div>
+        <div class="mesh-container">
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/7246694387.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/7251922739.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+        </div>
+        <div class="mesh-container">
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/7252795927.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/7253917541.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+        </div>
+        <div class="mesh-container">
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/7257040678.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+            <div class="mesh" width="50%">
+
+                <model-viewer src="./resources/meshes/7257376252.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+        </div>
+
+    </div>
+</body>

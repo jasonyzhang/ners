@@ -1,0 +1,193 @@
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./resources/style.css" media="screen" />
+<link rel="icon" type="image/x-icon" href="./resources/ri-favicon.ico">
+
+<html lang="en">
+
+<head>
+    <title>NeRS</title>
+    <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/
+        if you update and want to force Facebook to re-scrape. -->
+    <meta property="og:image" content="Path to my teaser.png" />
+    <meta property="og:title"
+        content="NeRS: Neural Reflectance Surfaces for Sparse-View 3D Reconstruction in the Wild" />
+    <meta property="og:description"
+        content="Given in-the-wild multiview images, noisy cameras, and a rough shape initialization, we recover the shape deformation, texture, and illumination." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97476543-1"
+        type="55bb8c55d1f644fceeea9b5a-text/javascript"></script>
+    <script type="55bb8c55d1f644fceeea9b5a-text/javascript">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-97476543-1');
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">
+            NeRS: Neural Reflectance Surfaces for Sparse-View 3D Reconstruction in the
+            Wild
+        </div>
+
+        <br>
+        <br>
+
+        <div class="author">
+            <a href="https://jasonyzhang.com/">Jason Y. Zhang</a>
+        </div>
+        <div class="author">
+            <a href="https://gengshan-y.github.io/">Gengshan Yang</a>
+        </div>
+        <div class="author">
+            <a href="https://shubhtuls.github.io/">Shubham Tulsiani</a><sup>*</sup>
+        </div>
+        <div class="author">
+            <a href="http://www.cs.cmu.edu/~deva/">Deva Ramanan</a><sup>*</sup>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="affiliation">Carnegie Mellon University</div>
+
+        <br>
+        <br>
+
+        <div class="links"><a href="">[Paper]</a></div>
+        <div class="links"><a href="">[Video]</a></div>
+        <div class="links"><a href="https://github.com/jasonyzhang/ners">[Code]</a></div>
+        <div class="links"><a href="./paper_figures">[Figures]</a></div>
+        <div class="links"><a href="./meshes">[Data]</a></div>
+        <br>
+        <br>
+        <div class="teaser preview">
+            <a href="resources/videos/zoom_full_res.mp4" target="_blank">
+                <video autoplay loop muted playsinline width="100%">
+                    <source src="resources/videos/zoom_preview.mp4" type="video/mp4">
+                </video>
+            </a>
+
+            <br>
+            <i>
+                Reconstructed cars from the Multiview Marketplace Cars dataset. Given
+                several (8-16) unposed images of the same instance, NeRS outputs a
+                textured 3D reconstruction along with the illumination parameters.
+            </i>
+        </div>
+
+        <br><br>
+
+        <h1>Abstract</h1>
+        <p>
+            Recent history has seen a tremendous growth of work exploring implicit representations of geometry and
+            radiance, popularized through Neural Radiance Fields (NeRF). Such works are fundamentally based on a
+            (implicit) <emph>volumetric</emph> representation of occupancy, allowing them to model diverse scene
+            structure including translucent objects and atmospheric obscurants. But because the vast majority of
+            real-world scenes are composed of well-defined surfaces, we introduce a <emph> surface </emph> analog of
+            such implicit models called Neural Reflectance Surfaces (NeRS). NeRS learns a neural shape representation of
+            a closed surface that is diffeomorphic to a sphere, guaranteeing water-tight reconstructions. Even more
+            importantly, surface parameterizations allow NeRS to learn (neural) bidirectional surface reflectance
+            functions (BRDFs) that factorize view-dependent appearance into environmental illumination, diffuse color
+            (albedo), and specular "shininess." Finally, rather than illustrating our results on synthetic scenes or
+            controlled in-the-lab capture, we assemble a novel dataset of multiview images from online marketplaces for
+            selling goods. Such "in-the-wild" multiview image sets pose a number of challenges, including a small number
+            of views with unknown/rough camera estimates. We demonstrate that surface-based neural reconstructions
+            enable learning from such data, outperforming volumetric neural rendering-based reconstructions. We hope
+            that NeRS serves as a first step toward building scalable, high-quality libraries of real-world shape,
+            materials, and illumination.
+        </p>
+
+        <br><br>
+        <hr>
+
+        <h1>Paper</h1>
+
+        <div class="paper-thumbnail">
+            <a href="https://arxiv.org">
+                <img class="layered-paper-big" width="100%" src="./resources/images/paper_thumb_small.jpg"
+                    alt="Paper thumbnail." />
+            </a>
+        </div>
+        <div class="paper-info">
+            <h4>NeRS: Neural Reflectance Surfaces for Sparse-View 3D Reconstruction
+                in the Wild</h4>
+            <h5>
+                Jason Y. Zhang, Gengshan Yang, Shubham Tulsiani, and Deva Ramanan
+            </h5>
+            <pre><code>@inproceedings{zhang2021ners,
+  title={{NeRS}: Neural Reflectance Surfaces for Sparse-view 3D Reconstruction in the Wild},
+  author={Zhang, Jason Y. and Yang, Gengshan and Tulsiani, Shubham and Ramanan, Deva},
+  booktitle={Conference on Neural Information Processing Systems},
+  year={2021}
+}</code></pre>
+        </div>
+
+        <br><br>
+        <hr><br>
+
+        <h1>Video</h1>
+
+        <div class="video-container">
+            <iframe src="" frameBorder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+
+        <br><br>
+        <hr>
+
+        <h1>Code</h1>
+        <a href="https://github.com/jasonyzhang/ners">
+            <img style="width:80%;" src="./resources/images/overview.JPG" alt="Model overview figure" />
+        </a>
+        <br>
+        <a class="links" href="https://github.com/jasonyzhang/ners">[GitHub] (Coming Soon)</a>
+
+        <br><br>
+        <hr>
+
+        <h1>Data</h1>
+        <div class="mesh-container">
+            <div class="mesh">
+
+                <model-viewer src="./resources/meshes/7246694387.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral" camera-orbit="0deg 75deg 105%"
+                    auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+            <div class="mesh">
+
+                <model-viewer src="./resources/meshes/espresso.glb" alt="A 3D model of an Espresso Machine" ar
+                    ar-modes="webxr scene-viewer quick-look" environment-image="neutral"
+                    camera-orbit="180deg 75deg 105%" auto-rotate camera-controls>
+                </model-viewer>
+            </div>
+        </div>
+
+        <a class="links" href="./meshes">[Multi-view Marketplace Cars] (Coming Soon)</a>
+
+
+        <br><br>
+        <hr>
+        <h1>Acknowledgements</h1>
+        <p>
+            We would like to thank Angjoo Kanazawa and Leonid Keselman for useful discussion and Sudeep Dasari for
+            helpful feedback on drafts of the manuscript. This work was supported in part by the NSF GFRP (Grant No.
+            DGE1745016), Singapore DSTA, and CMU Argo AI Center for Autonomous Vehicle Research. <a
+                href="https://github.com/jasonyzhang/webpage-template">Webpage template</a>.
+        </p>
+
+        <br><br>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,457 @@
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="./resources/style.css" media="screen" />
+<link rel="icon" type="image/x-icon" href="./resources/ri-favicon.ico">
+
+<html lang="en">
+
+<head>
+    <title>NeRS</title>
+    <!-- Facebook automatically scrapes this. Go to https://developers.facebook.com/tools/debug/
+        if you update and want to force Facebook to re-scrape. -->
+    <meta property="og:image" content="Path to my teaser.png" />
+    <meta property="og:title"
+        content="NeRS: Neural Reflectance Surfaces for Sparse-View 3D Reconstruction in the Wild" />
+    <meta property="og:description"
+        content="Given in-the-wild multiview images, noisy cameras, and a rough shape initialization, we recover the shape deformation, texture, and illumination." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97476543-1"
+        type="55bb8c55d1f644fceeea9b5a-text/javascript"></script>
+    <script type="55bb8c55d1f644fceeea9b5a-text/javascript">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-97476543-1');
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div id="top" class="title">
+            NeRS Paper Figures — Video Versions
+        </div>
+
+        <br>
+        <br>
+
+        <div class="links"><a href=".">[Main Page]</a></div>
+
+        <br>
+        <br>
+
+        <h2 id="fig1">Figure 1</h2>
+        <table width="90%">
+            <tr>
+                <td width="20%">Nearest Neigh. Input</td>
+                <td width="20%">Initial Car Mesh</td>
+                <td width="20%">Output Radiance</td>
+                <td width="20%">Predicted Texture</td>
+                <td width="20%">Illum. of Mean Texture</td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_jeep_rev.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+        </table>
+        <table width="90%">
+            <tr>
+                <td width="11.1%">NN Input</td>
+                <td width="11.1%" class="vert-gray">Output</td>
+                <td width="11.1%" class="vert-black">Interpolation</td>
+                <td width="11.1%">NN Input</td>
+                <td width="11.1%" class="vert-gray">Output</td>
+                <td width="11.1%" class="vert-black">Interpolation</td>
+                <td width="11.1%">NN Input</td>
+                <td width="11.1%" class="vert-gray">Output</td>
+                <td width="11.1%">Interpolation</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="vert-gray">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_microwave_rev.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1" class="vert-black">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_microwave_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="2" class="vert-gray">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_mayo_rev.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1" class="vert-black">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_mayo_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="2" class="vert-gray">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_motorcycle_rev.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1"><video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_motorcycle_deform.mp4" type="video/mp4">
+                    </video></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="vert-gray">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_ricecooker_rev.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1" class="vert-black">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_ricecooker_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="2" class="vert-gray">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_monitor_rev.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1" class="vert-black">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig1_monitor_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+        </table>
+        <caption>
+            <b>3D view synthesis in the wild.</b>
+            Top: From 8 multi-view internet images of a truck and a coarse initial mesh, we recover the camera poses, 3D
+            shape, texture, and illumination. Bottom: We demonstrate the scalability of our approach on a wide variety
+            of indoor and outdoor object, such as a
+            microwave, motorcycle, mayonaise bottle, ricecooker, and computer monitor.
+        </caption>
+
+        <br><br>
+        <hr>
+        <h2 id="fig5">Figure 5</h2>
+        <table width="90%">
+            <tr>
+                <td width="25%">Nearest Neighbor Input</td>
+                <td width="25%"> Initial Mesh</td>
+                <td width="25%"> NeRS (Ours)</td>
+                <td width="25%">Shape Interpolation</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_espresso.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_espresso_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_ketchup.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_ketchup_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_controller.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_controller_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_hydrant.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig5_hydrant_deform.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+        </table>
+        <caption> <b>Qualitative results on various household objects.</b> We demonstrate the versatility of our
+            approach on an espresso machine, a bottle of ketchup, a game controller, and a fire hydrant. Each instance
+            has 7-10 input views. We find that a coarse, cuboid mesh is sufficient as an initialization to learn
+            detailed shape and texture. Here, we visualize 360 degree viewpoints of the intial mesh and output radiance,
+            as well as the interpolation between the initial and predicted shapes.</caption>
+        <br><br>
+        <hr>
+        <h2 id="fig6">Figure 6</h2>
+        <table width="90%">
+            <tr>
+                <td width="16.5%">NN Training View</td>
+                <td width="16.5%">NeRS</td>
+                <td width="16.5%">IDR</td>
+                <td width="16.5%">NeRF*</td>
+                <td width="16.5%">MetaNeRF</td>
+                <td width="16.5%">MetaNeRF-ft</td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig6_fixed1.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig6_fixed2.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+
+        </table>
+        <caption> <b>Qualitative comparison with fixed cameras.</b> We evaluate all baselines on the task of novel view
+            synthesis on Multi-view Marketplace Cars trained and tested with fixed, pseudo-ground truth cameras. Since
+            we do not have ground truth cameras, we manually tune cameras optimized by NeRS over all images and treat
+            these as pseudo-ground truth.
+            We compare against IDR, which extracts
+            a surface from an SDF representation, but struggles to produce a view-consistent output given limited input
+            views.
+            We train a modified version of that is more competitive with sparse views (NeRF*). We also
+            evaluate against
+            a meta-learned initialization of NeRF with and without finetuning until convergence but
+            found poor results perhaps due to the domain shift from Shapenet cars.
+            Finally, we also visualize an ablation of NeRS that directly conditions the
+            radiance on position and viewing-direction, similar to NeRF (NeRS w/ NeRF-style View dep.). We find that
+            this ablation exhibits similar ghosting
+            behavior as NeRF, suggesting that the texture-illumination factorization
+            serves as a useful regularizer.
+            The red truck has 16 total views while the blue SUV has 8 total views.
+            Note that these results are trained with all images from the instance rather
+            than all-but-one as in the main paper.
+        </caption>
+        <br><br>
+        <hr>
+        <h2 id="fig7">Figure 7</h2>
+        <table width="90%">
+            <tr>
+                <td width="20%">NN Training View</td>
+                <td width="20%">NeRS</td>
+                <td width="20%">IDR</td>
+                <td width="20%">NeRF*</td>
+                <td width="20%">NeRS w/ NeRF-style View-dep.</td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_trained_stack_7252530482.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_trained_stack_7260353805.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_trained_stack_7251103879.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_trained_stack_7255124090.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_trained_stack_7257916836.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_trained_stack_7258860709.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+        </table>
+        <caption> <b>Qualitative comparison with trainable, approximate cameras.</b> We evaluate all baselines on the
+            task of <i>in-the-wild</i> novel view synthesis.
+            Since ground truth cameras may not be recoverable in general for in-the-wild scenes, we recover approximate
+            cameras using an off-the-shelf approach and allow each method to refine the camera poses over the course of
+            optimization.
+            We find that NeRS generalizes better than the baselines in this unconstrained but more realistic setup.
+            The red truck has 16 total views while the blue SUV has 8 total views.
+            Note that these results are trained with all images from the instance rather
+            than all-but-one as in the main paper.
+        </caption>
+        <br><br>
+        <hr>
+        <h2 id="fig8">Figure 8</h2>
+        <table width="90%">
+            <tr>
+                <td width="16.6%">NN Training View</td>
+                <td width="16.6%">NeRS</td>
+                <td width="16.6%">Illumin. of Mean Texture</td>
+                <td width="16.6%">NN Training View</td>
+                <td width="16.6%">NeRS</td>
+                <td width="16.6%">Illumin. of Mean Texture</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_car1.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_car2.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig7_car3.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+
+        </table>
+        <caption>
+            <b>Qualitative results on our in-the-wild multi-view Marketplace Cars dataset.</b> Here we visualize
+            the NeRS outputs for 3 listings from MVMC.
+        </caption>
+
+        <br><br>
+        <h2 id="fig10">Figure 10</h2>
+        <table width="90%">
+            <tr>
+                <td width="20%">Nearest Neighbor Training View</td>
+                <td width="20%">NeRS no View-Dep.</td>
+                <td width="20%">NeRS (Ours)</td>
+                <td width="20%">Illumination of Mean Texture</td>
+                <td width="20%">Environment Map</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig10_illumination_ablation_1.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <img src="resources/images/env_map1.png" , width="100%">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig10_illumination_ablation_2.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <img src="resources/images/env_map2.png" , width="100%">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig10_illumination_ablation_3.mp4" type="video/mp4">
+                    </video>
+                </td>
+                <td colspan="1">
+                    <img src="resources/images/env_map3.png" , width="100%">
+                </td>
+            </tr>
+        </table>
+        <caption>
+            <b>Comparison with NeRS trained without view dependence.</b> Here we compare the full NeRS with a NeRS
+            trained without any view dependence by only rendering using only the texture predictor and not the neural
+            environment map. We find that NeRS trained without
+            view-dependence cannot capture lighting effects when they are inconsistent across images. We also visualize
+            the environment maps and the illumination of the mean texture. The environment maps
+            show that the light is coming primarily from one side for the first car, uniformly from all directions for
+            the
+            second car, and strongly front left for the third car.
+        </caption>
+
+
+        <br><br>
+        <hr>
+        <h2 id="fig11">Figure 11</h2>
+        <table width="90%">
+            <tr>
+                <td width="17%">Nearest Neighbor Training View</td>
+                <td width="17%">Mask Carving using Initial Cameras</td>
+                <td width="17%">Mask Carving using Pre-trained Cameras</td>
+                <td width="17%">Mask Carving using Optimized Cameras</td>
+                <td width="17%">Learned Shape Model</td>
+                <td width="17%">NeRS (Ours)</td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig11_mask_carving_1.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <video autoplay loop muted playsinline width="100%">
+                        <source src="resources/videos/fig11_mask_carving_2.mp4" type="video/mp4">
+                    </video>
+                </td>
+            </tr>
+        </table>
+        <caption>
+            <b>Shapes from Silhouettes using Volume Carving.</b>
+            We compare shapes carved from the silhouettes of
+            the training views with the shape model learned by our approach. We construct a voxel grid of size
+            128x128x128 and keep only the voxels that are visible when projected to the masks using the off-the-shelf
+            cameras ("Initial
+            Cameras"),
+            pre-trained cameras from Stage 1 ("Pretrained Cameras"), and the final cameras after Stage 4 ("Optimized
+            Cameras"). We compare this with the shape model output by the shape predictor. We show the nearest neighbor
+            training view
+            and the final NeRS rendering for reference. While volume carving can appear reasonable given sufficiently
+            accurate cameras, we find that the shape model learned by NeRS is qualitatively a better reconstruction. In
+            particular, the model learns to correctly output the right side of the pickup truck and reconstructs the
+            sideview
+            mirrors from the texture cues, suggesting that a joint optimization of the shape and appearance is useful.
+            Also,
+            we note that the more "accurate" optimized cameras are themselves outputs of NeRS.
+        </caption>
+
+
+
+    </div>
+    <br><br>
+
+</body>
+
+</html>
