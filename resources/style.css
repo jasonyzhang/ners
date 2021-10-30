@@ -37,13 +37,23 @@ body {
     max-width: 150px;
 }
 
-.teaser {
-    width: 80%;
-    max-width: 800px;
+.teaser-left {
+    width: 67.5%;
 }
 
-.teaser img {
-    width: 100%;
+.teaser-right {
+    width: 22.5%;
+}
+
+@media (max-width: 750px) {
+    .teaser-left {
+        width: 95%;
+    }
+    .teaser-right {
+        margin-top: 30px;
+        width: 400px;
+        max-width: 95%;
+    }
 }
 
 .preview a {
