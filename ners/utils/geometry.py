@@ -5,6 +5,7 @@ import numpy as np
 import pytorch3d
 import torch
 import torch.nn.functional as F
+from pytorch3d.utils import ico_sphere
 
 
 def random_rotation(device=None):
@@ -85,7 +86,7 @@ def create_sphere(level=4, device=None):
     """
     Creates a unit ico-sphere.
     """
-    mesh = pytorch3d.utils.ico_sphere(level=level, device=device)
+    mesh = ico_sphere(level=level, device=device)
     return mesh.verts_padded()[0], mesh.faces_padded()[0]
 
 
