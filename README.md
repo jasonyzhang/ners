@@ -67,9 +67,9 @@ Coming Soon!
 
 ### Running on Your Own Objects
 
-We recommend beginning with the demo notebook so that you can visualize the intermediate
-outputs. The demo notebook generates the 3D reconstruction and illumination prediction
-for the espresso machine (data included).
+We recommend beginning with the [demo notebook](notebooks/NeRS%20In-the-wild%20Demo.ipynb)
+so that you can visualize the intermediate outputs. The demo notebook generates the 3D
+reconstruction and illumination prediction for the espresso machine (data included).
 
 To run on your own objects, you will need to acquire images and masks. See
 `data/espresso` for an example of the expected directory structure.
