@@ -2,6 +2,7 @@
 
 [[`arXiv`](https://arxiv.org/abs/2110.07604)]
 [[`Project Page`](https://jasonyzhang.com/ners/)]
+[[`Colab Demo`](https://colab.research.google.com/drive/1L4Sl_9Osc2J_I5YpkteLrb-VbnwdDokd?usp=sharing)]
 [[`Bibtex`](#CitingNeRS)]
 
 This repo contains the code for NeRS: Neural Reflectance Surfaces.
@@ -70,6 +71,10 @@ Coming Soon!
 We recommend beginning with the [demo notebook](notebooks/NeRS%20In-the-wild%20Demo.ipynb)
 so that you can visualize the intermediate outputs. The demo notebook generates the 3D
 reconstruction and illumination prediction for the espresso machine (data included).
+
+We also provide a [Colab notebook](https://colab.research.google.com/drive/1L4Sl_9Osc2J_I5YpkteLrb-VbnwdDokd?usp=sharing)
+that runs on a single GPU. Note that the Colab demo does not include the view-dependent
+illumination prediction.
 
 To run on your own objects, you will need to acquire images and masks. See
 `data/espresso` for an example of the expected directory structure.
