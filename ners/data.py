@@ -3,10 +3,10 @@ import os.path as osp
 from glob import glob
 
 import numpy as np
+import pytorch3d
 from PIL import Image
 
 import ners.utils.image as image_util
-from ners import data
 from ners.utils import (
     compute_crop_parameters,
     compute_distance_transform,
@@ -64,6 +64,18 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.05, skip_indices
     for k, v in data_dict.items():
         if k != "images_og":  # Original images can have any resolution.
             data_dict[k] = np.stack(v)
+
+    if osp.exists(osp.join(instance_dir, "metadata.json")):
+        metadata = json.load(open(osp.join(instance_dir, "metadata.json")))
+        data_dict["extents"] = metadata["extents"]
+        azimuths = metadata["azimuths"]
+        elevations = metadata["elevations"]
+        R, T = pytorch3d.renderer.look_at_view_transform(
+            dist=2,
+            elev=elevations,
+            azim=azimuths,
+        )
+        data_dict["initial_poses"] = R.tolist()
     return data_dict
 
 
@@ -122,7 +134,6 @@ def load_car_data(
         mask = image_util.crop_image(mask, square_bbox)
         mask = np.array(mask.resize((image_size, image_size), Image.BILINEAR)) > 0.5
         image_center, crop_scale = compute_crop_parameters(image_og.size, square_bbox)
-
         if use_optimized_cameras:
             initial_pose = annotation["camera_optimized"]["R"]
         else:

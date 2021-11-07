@@ -5,8 +5,8 @@ import pytorch3d
 import torch
 import torch.nn as nn
 import trimesh
-from pytorch3d.structures import Meshes
 from pytorch3d.loss import mesh_laplacian_smoothing
+from pytorch3d.structures import Meshes
 from tqdm.auto import tqdm
 
 import ners.utils.geometry as geom_util

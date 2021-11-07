@@ -54,7 +54,7 @@ class Ners(object):
         use_template_as_shape=True,
         symmetrize=False,
         num_layers_shape=4,
-        num_layers_tex=8,
+        num_layers_tex=12,
         num_layers_env=4,
         L=6,
     ) -> None:
@@ -536,10 +536,10 @@ class Ners(object):
             "fov": self.fov,
             "shininess": self.shininess,
             "specularity": self.specularity,
-            "f_shape": self.f_shape.module.state_dict(),
-            "f_tex": self.f_tex.module.state_dict(),
-            "f_env": self.f_env.module.state_dict(),
-            "f_template": self.f_template.module.state_dict(),
+            "f_shape": self.f_shape.state_dict(),
+            "f_tex": self.f_tex.state_dict(),
+            "f_env": self.f_env.state_dict(),
+            "f_template": self.f_template.state_dict(),
         }
         torch.save(state_dicts, filename)
 
@@ -550,10 +550,10 @@ class Ners(object):
         self.shininess = state_dicts["shininess"]
         self.specularity = state_dicts["specularity"]
 
-        self.f_shape.module.load_state_dict(state_dicts["f_shape"])
-        self.f_tex.module.load_state_dict(state_dicts["f_tex"])
-        self.f_env.module.load_state_dict(state_dicts["f_env"])
-        self.f_template.module.load_state_dict(state_dicts["f_template"])
+        self.f_shape.load_state_dict(state_dicts["f_shape"])
+        self.f_tex.load_state_dict(state_dicts["f_tex"])
+        self.f_env.load_state_dict(state_dicts["f_env"])
+        self.f_template.load_state_dict(state_dicts["f_template"])
         pred_vs, sv = self.get_pred_verts(predict_deformation=True)
         meshes = Meshes([pred_vs], [self.sphere_fs])
         pred_textures = TexturesImplicit(
@@ -614,7 +614,7 @@ class Ners(object):
         )
         writer = imageio.get_writer(f"{fname}.{extension}", mode="I", fps=fps)
         with torch.no_grad():
-            azim = torch.linspace(-180, 180, num_frames)
+            azim = torch.linspace(0, 360, num_frames)
             R, T = pytorch3d.renderer.cameras.look_at_view_transform(
                 dist=dist,
                 elev=elev,

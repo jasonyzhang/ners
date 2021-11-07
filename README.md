@@ -70,14 +70,27 @@ Coming Soon!
 
 We recommend beginning with the [demo notebook](notebooks/NeRS%20In-the-wild%20Demo.ipynb)
 so that you can visualize the intermediate outputs. The demo notebook generates the 3D
-reconstruction and illumination prediction for the espresso machine (data included).
+reconstruction and illumination prediction for the espresso machine (data included). You
+can also run the demo script:
+
+```
+python main.py --instance-dir data/espresso --symmetrize --export-mesh --predict-illumination
+```
 
 We also provide a [Colab notebook](https://colab.research.google.com/drive/1L4Sl_9Osc2J_I5YpkteLrb-VbnwdDokd?usp=sharing)
 that runs on a single GPU. Note that the Colab demo does not include the view-dependent
-illumination prediction.
+illumination prediction. At the end of the demo, you can view the turntable NeRS
+rendering and download the generated mesh as an obj.
 
 To run on your own objects, you will need to acquire images and masks. See
 `data/espresso` for an example of the expected directory structure.
+
+We also provide the images and masks for all objects in the paper. All objects except
+hydrant and robot should have a `--symmetrize` flag.
+```
+gdown  https://drive.google.com/uc?id=1JWuofTIlcLJmmzYtZYM2SvZVizJCcOU_
+unzip -f misc_objects.zip -d data
+```
 
 
 ## <a name="CitingNeRS"></a>Citing NeRS

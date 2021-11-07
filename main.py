@@ -3,8 +3,8 @@ Driver script for NeRS.
 
 Directory should contain images and masks. Masks can either be in a subdirectory named
 'masks' or saved in a json file (annotations.json) in RLE format. See MVMC dataset for
-an example. If running on your own images, include a `poses.json` with the pose
-initializations.
+an example. If running on your own images, the json file should contain initial poses
+and 3D cuboid extents for the initialization.
 
 instance_dir
 |_ images
@@ -13,20 +13,20 @@ instance_dir
 |_ masks
 |  |_ img1.png  (Same filename as corresponding image)
 |  |_ ...
-|_ annotations.json
-|_ poses.json
+|_ [  annotations.json (if using MVMC)  ]
+|_ [  metadata.json (if not using MVMC)  ]
 
 Usage:
     python main.py \
         --instance-dir <path to instance directory> \
-        [--output-dir <path to output directory>]\
+        [--output-dir <path to output directory>] \
         [--predict-illumination] \
-        [--export-mesh]
+        [--export-mesh] \
+        [--symmetrize]
 
 Example:
     python main.py \
-        --instance-dir data/mvmc/7246694387 --export-mesh --predict-illumination
-
+        --instance-dir data/espresso --symmetrize --export-mesh --predict-illumination
 """
 import argparse
 import os
@@ -35,8 +35,8 @@ import os.path as osp
 import torch
 
 from ners import Ners
-from ners.data import load_car_data
-from ners.models import load_car_model
+from ners.data import load_car_data, load_data_from_dir
+from ners.models import TemplateUV, load_car_model, pretrain_template_uv
 
 
 def get_parser():
@@ -51,12 +51,15 @@ def get_parser():
         help="Path to output directory (Defaults to output/<instance directory>).",
     )
     parser.add_argument(
-        "--export-mesh",
-        action="store_true",
-        help="If True, exports textured mesh to an obj file.",
+        "--mvmc", action="store_true", help="If set, uses MVMC dataset loader."
     )
     parser.add_argument(
-        "--force", action="store_true", help="If True, overwrites existing predictions."
+        "--export-mesh",
+        action="store_true",
+        help="If set, exports textured mesh to an obj file.",
+    )
+    parser.add_argument(
+        "--force", action="store_true", help="If set, overwrites existing predictions."
     )
     parser.add_argument(
         "--predict-illumination",
@@ -70,12 +73,16 @@ def get_parser():
         dest="predict_illumination",
     )
     parser.add_argument(
-        "--num_frames",
+        "--symmetrize",
+        action="store_true",
+        help="If set, makes object symmetric about the y-z plane axis",
+    )
+    parser.add_argument(
+        "--num-frames",
         default=360,
         type=int,
         help="Number of frames for video visualization.",
     )
-    parser.add_argument()
     # Hyperparameters
     parser.add_argument(
         "--num-iterations-camera",
@@ -91,7 +98,7 @@ def get_parser():
     )
     parser.add_argument(
         "--num-iterations-texture",
-        default=1000,
+        default=3000,
         type=int,
         help="Number of iterations to learn texture network.",
     )
@@ -131,8 +138,18 @@ def main(args):
     gpu_ids = list(range(num_gpus - 1))
     gpu_id_illumination = num_gpus - 1
 
-    data = load_car_data(instance_dir, use_optimized_cameras=True, image_size=256)
-    f_template = load_car_model()
+    if args.mvmc:
+        data = load_car_data(instance_dir, use_optimized_cameras=True, image_size=256)
+        f_template = load_car_model()
+    else:
+        data = load_data_from_dir(instance_dir, image_size=256)
+        if "extents" not in data:
+            raise ValueError(
+                "For your own objects, please specify the cuboid extents in "
+                "metadata.json."
+            )
+        f_template = TemplateUV()
+        f_template = pretrain_template_uv(f_template, extents=data["extents"])
     ners = Ners(
         images=data["images"],
         masks=data["masks"],
@@ -146,6 +163,7 @@ def main(args):
         gpu_ids=gpu_ids,
         gpu_id_illumination=gpu_id_illumination,
         L=args.L,
+        symmetrize=args.symmetrize,
     )
     name = osp.basename(instance_dir)
     ners.visualize_input_views(
@@ -184,13 +202,13 @@ def main(args):
             filename=osp.join(output_dir, f"{name}_5_optimized_radiance.jpg"),
             title=f"{name} Optimized Radiance",
         )
-        ners.save_parameters(weights_path)
         ners.make_video(
             osp.join(output_dir, f"{name}_video"),
             use_antialiasing=True,
             visuals=("nn", "full", "albedo", "lighting"),
             num_frames=args.num_frames,
         )
+    ners.save_parameters(weights_path)
 
 
 if __name__ == "__main__":
