@@ -354,7 +354,7 @@ class Ners(object):
         params = [R, T, fov]
         for param in params:
             param.requires_grad = True
-        parameters = [{"params": params, "lr": lr}]
+        parameters = [{"params": params, "lr": lr * 10}]
         parameters.append({"params": self.f_shape.parameters(), "lr": lr})
 
         optim = torch.optim.Adam(parameters)
@@ -401,7 +401,7 @@ class Ners(object):
         params = [R, T, fov]
         for param in params:
             param.requires_grad = True
-        parameters = [{"params": params, "lr": lr}]
+        parameters = [{"params": params, "lr": lr * 10}]
         parameters.append({"params": self.f_shape.parameters(), "lr": lr})
         parameters.append({"params": self.f_tex.parameters(), "lr": lr})
 
@@ -461,7 +461,7 @@ class Ners(object):
         params = [R, T, fov, self.specularity, self.shininess]
         for param in params:
             param.requires_grad = True
-        parameters = [{"params": params, "lr": lr}]
+        parameters = [{"params": params, "lr": lr * 10}]
         parameters.append({"params": self.f_shape.parameters(), "lr": lr})
         parameters.append({"params": self.f_tex.parameters(), "lr": lr})
         parameters.append({"params": self.f_env.parameters(), "lr": lr})

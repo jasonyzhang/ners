@@ -126,7 +126,7 @@ class HarmonicEmbedding(torch.nn.Module):
 class BaseNetwork(nn.Module):
     def __init__(self, n_harmonic_functions=6, omega0=0.1):
         super().__init__()
-        self.positional_encoding = HarmonicEmbedding(n_harmonic_functions, omega0)
+        self.positional_encoding = HarmonicEmbedding(n_harmonic_functions)
 
     def get_device(self, default_device=None):
         """
@@ -142,7 +142,7 @@ class BaseNetwork(nn.Module):
 class TemplateUV(BaseNetwork):
     def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=8):
         input_size = L * 2 * input_size
-        super().__init__(n_harmonic_functions=L, omega0=np.pi)
+        super().__init__(n_harmonic_functions=L)
         layers = []
         for i in range(num_layers - 1):
             if i == 0:
@@ -222,7 +222,7 @@ class ImplicitTextureNet(BaseNetwork):
             gain (float, optional): Gain for output activation to initialize near 0.5.
         """
         input_size = input_size * L * 2
-        super().__init__(n_harmonic_functions=L)
+        super().__init__(n_harmonic_functions=L, omega0=np.pi)
         self.num_layers = num_layers
         self.input_size = input_size
         self.hidden_size = hidden_size
