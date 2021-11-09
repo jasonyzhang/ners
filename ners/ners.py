@@ -152,7 +152,7 @@ class Ners(object):
         self.cameras_current = PerspectiveCameras(
             fov=self.fov,
             R=np.stack(initial_poses),
-            T=[[0, 0, 3.0]] * self.N,
+            T=[[0, 0, 2]] * self.N,
             image_center=image_center,
             crop_scale=crop_scale,
             device=device,
@@ -218,7 +218,7 @@ class Ners(object):
                 pred_vs = pred_vs + self.f_shape(sv)
         return pred_vs, sv
 
-    def compute_chamfer_loss(self, meshes, cameras, num_samples=500):
+    def compute_chamfer_loss(self, meshes, cameras, num_samples=300):
         """
         Computes the 2D chamfer loss between the edges of the mask and edges of the
         rendered silhouette.
@@ -283,6 +283,8 @@ class Ners(object):
         with torch.no_grad():
             rend = self.renderer_textured(meshes, cameras=cameras)
             rend_images = rend.detach().cpu().numpy()[..., :3].clip(0, 1)
+            rend_sil = self.renderer_silhouette(meshes, cameras=cameras)
+            rend_sil = rend_sil.detach().cpu().numpy()[..., 3].clip(0, 1)
         n = len(rend_images)
         fig, axs = plt.subplots(n, 4, figsize=(8, n * 2), dpi=100)
         axs = axs.flatten()
@@ -291,7 +293,7 @@ class Ners(object):
             axs[4 * i].imshow(image)
             axs[4 * i].set_title(f"Image {i + 1}")
             rend_image = rend_images[i]
-            mask = np.all((rend_image != 1), axis=-1)
+            mask = rend_sil[i] > 0.5
             vis_im = 1 - (1 - image.copy()) * 0.7
             vis_im[mask] = rend_image[mask].clip(0, 1)
 
@@ -352,7 +354,7 @@ class Ners(object):
         params = [R, T, fov]
         for param in params:
             param.requires_grad = True
-        parameters = [{"params": params, "lr": lr * 10}]
+        parameters = [{"params": params, "lr": lr}]
         parameters.append({"params": self.f_shape.parameters(), "lr": lr})
 
         optim = torch.optim.Adam(parameters)
@@ -392,7 +394,7 @@ class Ners(object):
             textures=TexturesVertex((sv.unsqueeze(0) + 1) / 2),
         ).detach()
 
-    def optimize_texture(self, num_iterations=1000, lr=1e-3, pbar=True):
+    def optimize_texture(self, num_iterations=3000, lr=1e-3, pbar=True):
         R = geom_util.matrix_to_rot6d(self.cameras_current.R.detach())
         T = self.cameras_current.T.detach()
         fov = self.fov.clone().detach()

@@ -10,7 +10,7 @@ This repo contains the code for NeRS: Neural Reflectance Surfaces.
 The code was tested with the following dependencies:
 * Python 3.8.6
 * Pytorch 1.7.0
-* Pytorch3d 0.4.0
+* Pytorch3d 0.5.0
 * CUDA 11.0
 
 ## Installation
@@ -23,8 +23,8 @@ compatible with your GPU.
 ```
 git clone git@github.com:jasonyzhang/ners.git
 conda create -n ners python=3.8
-cond activate pytorch3d
-conda install -c pytorch pytorch=1.7.0 torchvision cudatoolkit=11.0
+conda activate ners
+conda install -c pytorch pytorch=1.7.1 torchvision cudatoolkit=10.2
 pip install -r requirements.txt
 ```
 
@@ -36,10 +36,10 @@ for troubleshooting and additional details.
 
 ```
 mkdir -p external
-git clone https://github.com/facebookresearch/pytorch3d.git external/pytorch3d
+git clone --depth 1 --branch v0.5.0 https://github.com/facebookresearch/pytorch3d.git external/pytorch3d
 cd external/pytorch3d
-conda install -c conda-forge -c fvcore -c iopath fvcore iopath
-conda install -c bottler nvidiacub
+conda activate ners
+conda install -c conda-forge -c fvcore -c iopath -c bottler fvcore iopath nvidiacub
 python setup.py install
 ```
 
@@ -88,8 +88,8 @@ To run on your own objects, you will need to acquire images and masks. See
 We also provide the images and masks for all objects in the paper. All objects except
 hydrant and robot should have a `--symmetrize` flag.
 ```
-gdown  https://drive.google.com/uc?id=1JWuofTIlcLJmmzYtZYM2SvZVizJCcOU_
-unzip -f misc_objects.zip -d data
+gdown https://drive.google.com/uc?id=1JWuofTIlcLJmmzYtZYM2SvZVizJCcOU_
+unzip -n misc_objects.zip -d data
 ```
 
 

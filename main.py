@@ -114,6 +114,15 @@ def get_parser():
     parser.add_argument(
         "--L", type=int, default=6, help="Number of bases for positiional encoding."
     )
+    parser.add_argument(
+        "--num-layers-shape", type=int, default=4, help="Number of layers in f_shape."
+    )
+    parser.add_argument(
+        "--num-layers-tex", type=int, default=12, help="Number of layers in f_tex."
+    )
+    parser.add_argument(
+        "--num-layers-env", type=int, default=4, help="Number of layers in f_env."
+    )
     parser.set_defaults(predict_illumination=True)
     return parser
 
@@ -142,7 +151,7 @@ def main(args):
         data = load_car_data(instance_dir, use_optimized_cameras=True, image_size=256)
         f_template = load_car_model()
     else:
-        data = load_data_from_dir(instance_dir, image_size=256)
+        data = load_data_from_dir(instance_dir, image_size=256, pad_size=0.1)
         if "extents" not in data:
             raise ValueError(
                 "For your own objects, please specify the cuboid extents in "
@@ -164,6 +173,9 @@ def main(args):
         gpu_id_illumination=gpu_id_illumination,
         L=args.L,
         symmetrize=args.symmetrize,
+        num_layers_shape=args.num_layers_shape,
+        num_layers_tex=args.num_layers_tex,
+        num_layers_env=args.num_layers_env,
     )
     name = osp.basename(instance_dir)
     ners.visualize_input_views(

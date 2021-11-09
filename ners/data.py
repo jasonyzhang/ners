@@ -2,6 +2,7 @@ import json
 import os.path as osp
 from glob import glob
 
+import ipdb
 import numpy as np
 import pytorch3d
 from PIL import Image
@@ -44,9 +45,9 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.05, skip_indices
         image_og = Image.open(image_path).convert("RGB")
         mask = Image.open(mask_path).convert("L")
         bbox = get_bbox(np.array(mask) / 255.0 > 0.5)
-        center = ((bbox[:2] + bbox[2:]) / 2.0).astype(int)
-        s = (max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)).astype(int)
-        square_bbox = np.concatenate([center - s, center + s])
+        center = (bbox[:2] + bbox[2:]) / 2.0
+        s = max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)
+        square_bbox = np.concatenate([center - s, center + s]).astype(int)
         # Crop image and mask.
         image = image_util.crop_image(image_og, square_bbox)
         image = np.array(image.resize((image_size, image_size), Image.LANCZOS)) / 255.0

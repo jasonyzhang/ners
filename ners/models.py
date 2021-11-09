@@ -124,9 +124,9 @@ class HarmonicEmbedding(torch.nn.Module):
 
 
 class BaseNetwork(nn.Module):
-    def __init__(self, n_harmonic_functions=6):
+    def __init__(self, n_harmonic_functions=6, omega0=0.1):
         super().__init__()
-        self.positional_encoding = HarmonicEmbedding(n_harmonic_functions)
+        self.positional_encoding = HarmonicEmbedding(n_harmonic_functions, omega0)
 
     def get_device(self, default_device=None):
         """
@@ -142,7 +142,7 @@ class BaseNetwork(nn.Module):
 class TemplateUV(BaseNetwork):
     def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=8):
         input_size = L * 2 * input_size
-        super().__init__(n_harmonic_functions=L)
+        super().__init__(n_harmonic_functions=L, omega0=np.pi)
         layers = []
         for i in range(num_layers - 1):
             if i == 0:
@@ -382,7 +382,7 @@ class Symmetrize(BaseNetwork):
         return (pred + pred_ref) * 0.5
 
 
-def load_car_model(path="/home/jasonzh2/multiview_imr/models/templates/car.pth"):
+def load_car_model(path="models/templates/car.pth"):
     template = TemplateUV(L=8, num_layers=3, hidden_size=256)
     template.load_state_dict(torch.load(path))
     return template
