@@ -112,7 +112,7 @@ def get_parser():
         "--fov-init", default=60.0, type=float, help="Initial field of view."
     )
     parser.add_argument(
-        "--L", type=int, default=6, help="Number of bases for positiional encoding."
+        "--L", type=int, default=10, help="Number of bases for positiional encoding."
     )
     parser.add_argument(
         "--num-layers-shape", type=int, default=4, help="Number of layers in f_shape."
@@ -157,7 +157,7 @@ def main(args):
                 "For your own objects, please specify the cuboid extents in "
                 "metadata.json."
             )
-        f_template = TemplateUV()
+        f_template = TemplateUV(L=10)
         f_template = pretrain_template_uv(f_template, extents=data["extents"])
     ners = Ners(
         images=data["images"],

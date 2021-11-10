@@ -394,7 +394,7 @@ class Ners(object):
             textures=TexturesVertex((sv.unsqueeze(0) + 1) / 2),
         ).detach()
 
-    def optimize_texture(self, num_iterations=3000, lr=1e-3, pbar=True):
+    def optimize_texture(self, num_iterations=3000, lr=1e-4, pbar=True):
         R = geom_util.matrix_to_rot6d(self.cameras_current.R.detach())
         T = self.cameras_current.T.detach()
         fov = self.fov.clone().detach()
@@ -454,7 +454,7 @@ class Ners(object):
         self.meshes_current = meshes[0]
         self.meshes_current.textures = pred_textures
 
-    def optimize_radiance(self, num_iterations=500, pbar=True, lr=1e-3):
+    def optimize_radiance(self, num_iterations=500, pbar=True, lr=1e-4):
         R = geom_util.matrix_to_rot6d(self.cameras_current.R.detach())
         T = self.cameras_current.T.detach()
         fov = self.fov.clone().detach()
