@@ -64,7 +64,16 @@ If using GrabCut, you can try [this interactive segmentation tool](https://githu
 
 ### Running on MVMC
 
-Coming Soon!
+Use the `--mvmc` flag to use the MVMC dataloader. A sample car is included in the repo.
+```
+python main.py --instance-dir data/mvmc/7246694387 --mvmc --export-mesh --symmetrize
+```
+
+To download the MVMC dataset (576 instances), run the following command:
+```
+gdown https://drive.google.com/uc?id=1P7BhDyUPhf4IF2FOWwddztYvjtIxR3II
+unzip -n mvmc.zip -d data
+```
 
 ### Running on Your Own Objects
 
@@ -92,6 +101,25 @@ gdown https://drive.google.com/uc?id=1JWuofTIlcLJmmzYtZYM2SvZVizJCcOU_
 unzip -n misc_objects.zip -d data
 ```
 
+### Initializing with Non-cuboid Mesh
+
+If your object cannot be initialized from a cuboid shape, or if you wish to use a
+specific mesh as the initial template, you can also initialize `f_template` with a
+specific mesh model.
+
+First, you will need a mapping from the mesh vertices to spherical coordinates. We
+recommend using this [repo](https://github.com/icemiliang/spherical_harmonic_maps) to
+learn this mapping. The initial mesh should be water-tight and genus-0. It may be
+helpful to decimate the mesh to make it simpler.
+
+Once you have an object mesh and the corresponding sphere mesh, use the pre-processing
+script to initialize the `f_template` network:
+```
+python -m scripts.pretrain_shape_template \
+    --object-mesh models/meshes/car.obj \
+    --sphere-mesh models/meshes/car_sphere.obj \
+    --output-path models/templates/car.pth
+```
 
 ## <a name="CitingNeRS"></a>Citing NeRS
 

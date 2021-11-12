@@ -21,7 +21,7 @@ def get_bbox(img):
     return np.array(bbox)
 
 
-def load_data_from_dir(instance_dir, image_size=256, pad_size=0.05, skip_indices=()):
+def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=()):
     """
     Loads NeRS data from a directory. Assumes that a folder containing images and a
     folder container masks. Mask names should be the same as the images.
@@ -81,7 +81,7 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.05, skip_indices
 
 
 def load_car_data(
-    instance_dir, use_optimized_cameras=True, image_size=256, pad_size=0.05
+    instance_dir, use_optimized_cameras=True, image_size=256, pad_size=0.1
 ):
     """
     Processes instance of car dataset for NeRS optimization.

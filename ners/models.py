@@ -81,7 +81,7 @@ def shape_model_to_mesh(shape_model, sphere_level=4, textures=None):
 
 
 class HarmonicEmbedding(torch.nn.Module):
-    def __init__(self, n_harmonic_functions=6, omega0=0.1):
+    def __init__(self, n_harmonic_functions=10, omega0=0.1):
         """
         Positional Embedding implementation (adapted from Pytorch3D).
 
@@ -124,7 +124,7 @@ class HarmonicEmbedding(torch.nn.Module):
 
 
 class BaseNetwork(nn.Module):
-    def __init__(self, n_harmonic_functions=6, omega0=0.1):
+    def __init__(self, n_harmonic_functions=10, omega0=0.1):
         super().__init__()
         self.positional_encoding = HarmonicEmbedding(n_harmonic_functions, omega0)
 
@@ -140,7 +140,7 @@ class BaseNetwork(nn.Module):
 
 
 class TemplateUV(BaseNetwork):
-    def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=8):
+    def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10):
         input_size = L * 2 * input_size
         super().__init__(n_harmonic_functions=L)
         layers = []
@@ -167,7 +167,7 @@ class TemplateUV(BaseNetwork):
 
 
 class DeltaUV(BaseNetwork):
-    def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=8):
+    def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10):
         input_size = L * 2 * input_size
         super().__init__(n_harmonic_functions=L)
         layers = []
@@ -383,6 +383,6 @@ class Symmetrize(BaseNetwork):
 
 
 def load_car_model(path="models/templates/car.pth"):
-    template = TemplateUV(L=8, num_layers=3, hidden_size=256)
+    template = TemplateUV(L=10, num_layers=3, hidden_size=256)
     template.load_state_dict(torch.load(path))
     return template

@@ -3,7 +3,7 @@ external/
 models/
 notebooks/
 output/
-
+scripts/
 
 workspace.code-workspace
 .vscode

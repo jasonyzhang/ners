@@ -1,4 +1,8 @@
 from .camera import compute_crop_parameters
+from .geometry import (
+    create_sphere,
+    random_rotation,
+)
 from .image import antialias, crop_image
 from .masks import (
     binary_mask_to_rle,

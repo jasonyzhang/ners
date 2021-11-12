@@ -22,7 +22,7 @@ Usage:
         [--output-dir <path to output directory>] \
         [--predict-illumination] \
         [--export-mesh] \
-        [--symmetrize]
+        [--symmetrize/--no-symmetrize]
 
 Example:
     python main.py \
@@ -36,7 +36,7 @@ import torch
 
 from ners import Ners
 from ners.data import load_car_data, load_data_from_dir
-from ners.models import TemplateUV, load_car_model, pretrain_template_uv
+from ners.models import Symmetrize, TemplateUV, load_car_model, pretrain_template_uv
 
 
 def get_parser():
@@ -75,7 +75,13 @@ def get_parser():
     parser.add_argument(
         "--symmetrize",
         action="store_true",
+        dest="symmetrize",
         help="If set, makes object symmetric about the y-z plane axis",
+    )
+    parser.add_argument(
+        "--no-symmetrize",
+        action="store_false",
+        dest="symmetrize",
     )
     parser.add_argument(
         "--num-frames",
@@ -123,7 +129,7 @@ def get_parser():
     parser.add_argument(
         "--num-layers-env", type=int, default=4, help="Number of layers in f_env."
     )
-    parser.set_defaults(predict_illumination=True)
+    parser.set_defaults(predict_illumination=True, symmetrize=True)
     return parser
 
 
@@ -144,14 +150,18 @@ def main(args):
     print("Saving weights to {}".format(weights_path))
 
     num_gpus = torch.cuda.device_count()
-    gpu_ids = list(range(num_gpus - 1))
-    gpu_id_illumination = num_gpus - 1
+    if args.predict_illumination:
+        gpu_ids = list(range(num_gpus - 1))
+        gpu_id_illumination = num_gpus - 1
+    else:
+        gpu_ids = list(range(num_gpus))
+        gpu_id_illumination = None
 
     if args.mvmc:
         data = load_car_data(instance_dir, use_optimized_cameras=True, image_size=256)
         f_template = load_car_model()
     else:
-        data = load_data_from_dir(instance_dir, image_size=256, pad_size=0.1)
+        data = load_data_from_dir(instance_dir, image_size=256)
         if "extents" not in data:
             raise ValueError(
                 "For your own objects, please specify the cuboid extents in "
