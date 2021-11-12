@@ -36,7 +36,7 @@ import torch
 
 from ners import Ners
 from ners.data import load_car_data, load_data_from_dir
-from ners.models import Symmetrize, TemplateUV, load_car_model, pretrain_template_uv
+from ners.models import TemplateUV, load_car_model, pretrain_template_uv
 
 
 def get_parser():

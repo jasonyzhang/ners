@@ -20,20 +20,19 @@ Example:
         --visualize-path models/templates/car.obj
 """
 import argparse
-import os.path as osp
 
-import torch
 import numpy as np
-from tqdm.auto import tqdm
-import trimesh
-
 import pytorch3d
 import pytorch3d.io
+import torch
+import trimesh
 from pytorch3d.loss import (
+    chamfer_distance,
     mesh_laplacian_smoothing,
     mesh_normal_consistency,
-    chamfer_distance,
 )
+from tqdm.auto import tqdm
+
 from ners.models import TemplateUV
 from ners.utils import create_sphere, random_rotation, sample_consistent_points
 

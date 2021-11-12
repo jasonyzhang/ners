@@ -140,7 +140,9 @@ class BaseNetwork(nn.Module):
 
 
 class TemplateUV(BaseNetwork):
-    def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10):
+    def __init__(
+        self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10
+    ):
         input_size = L * 2 * input_size
         super().__init__(n_harmonic_functions=L)
         layers = []
@@ -167,7 +169,9 @@ class TemplateUV(BaseNetwork):
 
 
 class DeltaUV(BaseNetwork):
-    def __init__(self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10):
+    def __init__(
+        self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10
+    ):
         input_size = L * 2 * input_size
         super().__init__(n_harmonic_functions=L)
         layers = []

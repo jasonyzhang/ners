@@ -2,7 +2,6 @@ import json
 import os.path as osp
 from glob import glob
 
-import ipdb
 import numpy as np
 import pytorch3d
 from PIL import Image

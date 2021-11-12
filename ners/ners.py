@@ -5,7 +5,6 @@ import os.path as osp
 
 import cv2
 import imageio
-import ipdb
 import matplotlib.pyplot as plt
 import numpy as np
 import pytorch3d

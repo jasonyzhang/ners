@@ -75,6 +75,13 @@ gdown https://drive.google.com/uc?id=1P7BhDyUPhf4IF2FOWwddztYvjtIxR3II
 unzip -n mvmc.zip -d data
 ```
 
+To run on the entire MVMC dataset, run the following (note that this will take a long
+time, roughly 10 days to run on a single 4-GPU machine. It is recommended to
+parallelize using `--index` and `--start`):
+```
+python scripts/mvmc_driver.py
+```
+
 ### Running on Your Own Objects
 
 We recommend beginning with the [demo notebook](notebooks/NeRS%20In-the-wild%20Demo.ipynb)

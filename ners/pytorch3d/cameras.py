@@ -1,7 +1,6 @@
 """
 Class for Perspective cameras with image center and crop scale support.
 """
-import ipdb
 import numpy as np
 import torch
 from pytorch3d.renderer import FoVPerspectiveCameras
