@@ -36,13 +36,17 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=
         "image_centers": [],
         "crop_scales": [],
     }
-    for i, image_path in enumerate(sorted(glob(osp.join(image_dir, "*.jpg")))):
+    for i, image_path in enumerate(sorted(glob(osp.join(image_dir, "*.png")))):
         if i in skip_indices:
             continue
         image_name = osp.basename(image_path)
         mask_path = osp.join(mask_dir, image_name.replace("jpg", "png"))
         image_og = Image.open(image_path).convert("RGB")
         mask = Image.open(mask_path).convert("L")
+        
+        image_og_flip = image_og.transpose(Image.FLIP_LEFT_RIGHT)
+        mask_flip = mask.transpose(Image.FLIP_LEFT_RIGHT)
+        
         bbox = get_bbox(np.array(mask) / 255.0 > 0.5)
         center = (bbox[:2] + bbox[2:]) / 2.0
         s = max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)
@@ -61,6 +65,26 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=
         data_dict["images_og"].append(image_og)
         data_dict["masks"].append(mask)
         data_dict["masks_dt"].append(compute_distance_transform(mask))
+
+        bbox = get_bbox(np.array(mask_flip) / 255.0 > 0.5)
+        center = (bbox[:2] + bbox[2:]) / 2.0
+        s = max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)
+        square_bbox = np.concatenate([center - s, center + s]).astype(int)
+        # Crop image and mask_flip.
+        image = image_util.crop_image(image_og_flip, square_bbox)
+        image = np.array(image.resize((image_size, image_size), Image.LANCZOS)) / 255.0
+        mask_flip = image_util.crop_image(mask_flip, square_bbox)
+        mask_flip = np.array(mask_flip.resize((image_size, image_size), Image.BILINEAR))
+        mask_flip = mask_flip / 255.0 > 0.5
+        image_center, crop_scale = compute_crop_parameters(image_og_flip.size, square_bbox)
+        data_dict["bbox"].append(square_bbox)
+        data_dict["crop_scales"].append(crop_scale)
+        data_dict["image_centers"].append(image_center)
+        data_dict["images"].append(image)
+        data_dict["images_og"].append(image_og_flip)
+        data_dict["masks"].append(mask_flip)
+        data_dict["masks_dt"].append(compute_distance_transform(mask_flip))
+
     for k, v in data_dict.items():
         if k != "images_og":  # Original images can have any resolution.
             data_dict[k] = np.stack(v)
