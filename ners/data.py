@@ -35,11 +35,25 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=
         "bbox": [],
         "image_centers": [],
         "crop_scales": [],
+        "azimuths": [],
+        "elevations": [],
     }
     for i, image_path in enumerate(sorted(glob(osp.join(image_dir, "*.png")))):
         if i in skip_indices:
             continue
         image_name = osp.basename(image_path)
+        name_parts = image_name.split(".")[0].split("_")
+        elev = int(name_parts[2].split("elev")[1])
+        azimuth = int(name_parts[3].split("azim")[1])
+        nn_exists = False
+        
+        for azi in data_dict["azimuths"]:
+          if (azimuth > azi - 15) and (azimuth < azi + 15):
+            nn_exists = True
+        
+        if nn_exists:
+          continue
+        
         mask_path = osp.join(mask_dir, image_name.replace("jpg", "png"))
         image_og = Image.open(image_path).convert("RGB")
         mask = Image.open(mask_path).convert("L")
@@ -65,6 +79,8 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=
         data_dict["images_og"].append(image_og)
         data_dict["masks"].append(mask)
         data_dict["masks_dt"].append(compute_distance_transform(mask))
+        data_dict["azimuths"].append(azimuth)
+        data_dict["elevations"].append(elev)
 
         bbox = get_bbox(np.array(mask_flip) / 255.0 > 0.5)
         center = (bbox[:2] + bbox[2:]) / 2.0
@@ -84,6 +100,8 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=
         data_dict["images_og"].append(image_og_flip)
         data_dict["masks"].append(mask_flip)
         data_dict["masks_dt"].append(compute_distance_transform(mask_flip))
+        data_dict["azimuths"].append(360 - azimuth)
+        data_dict["elevations"].append(elev)
 
     for k, v in data_dict.items():
         if k != "images_og":  # Original images can have any resolution.
