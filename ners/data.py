@@ -154,21 +154,28 @@ def load_car_data(
         "images": [],  # (N, 256, 256, 3).
         "images_og": [],  # (N, H, W, 3).
         "initial_poses": [],  # (N, 3, 3).
+        "initial_trans": [],
         "masks": [],  # (N, 256, 256).
         "masks_dt": [],  # (N, 256, 256).
     }
     for annotation in annotations["annotations"]:
         filename = osp.join(instance_dir, "images", annotation["filename"])
 
-        # Make a square bbox.
-        bbox = np.array(annotation["bbox"])
-        center = ((bbox[:2] + bbox[2:]) / 2.0).astype(int)
-        s = (max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)).astype(int)
-        square_bbox = np.concatenate([center - s, center + s])
+        # # Make a square bbox.
+        # bbox = np.array(annotation["bbox"])
+        # center = ((bbox[:2] + bbox[2:]) / 2.0).astype(int)
+        # s = (max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)).astype(int)
+        # square_bbox = np.concatenate([center - s, center + s])
 
         # Load image and mask.
         image_og = Image.open(filename).convert("RGB")
-        mask = Image.fromarray(rle_to_binary_mask(annotation["mask"]))
+        mask = Image.fromarray(rle_to_binary_mask(annotation["mask"]), mode='L')
+        
+        # Make a square bbox.
+        bbox = get_bbox(np.array(mask) > 0.5)
+        center = (bbox[:2] + bbox[2:]) / 2.0
+        s = max(bbox[2:] - bbox[:2]) / 2.0 * (1 + pad_size)
+        square_bbox = np.concatenate([center - s, center + s]).astype(int)
 
         # Crop image and mask.
         image = image_util.crop_image(image_og, square_bbox)
@@ -178,14 +185,17 @@ def load_car_data(
         image_center, crop_scale = compute_crop_parameters(image_og.size, square_bbox)
         if use_optimized_cameras:
             initial_pose = annotation["camera_optimized"]["R"]
+            initial_translation = annotation["camera_optimized"]["T"]
         else:
             initial_pose = annotation["camera_initial"]["R"]
+            initial_translation = annotation["camera_initial"]["T"]
         data_dict["bbox"].append(square_bbox)
         data_dict["crop_scales"].append(crop_scale)
         data_dict["image_centers"].append(image_center)
         data_dict["images"].append(image)
         data_dict["images_og"].append(image_og)
         data_dict["initial_poses"].append(initial_pose)
+        data_dict["initial_trans"].append(initial_translation)
         data_dict["masks"].append(mask)
         data_dict["masks_dt"].append(compute_distance_transform(mask))
     for k, v in data_dict.items():
