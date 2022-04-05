@@ -143,8 +143,17 @@ class TemplateUV(BaseNetwork):
     def __init__(
         self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10
     ):
-        input_size = L * 2 * input_size
+        input_size = (L * 2 * input_size) + 512
         super().__init__(n_harmonic_functions=L)
+        latent_space = np.load('data/mean_latent.npz')
+        self.latent_space = torch.from_numpy(latent_space['arr_0'])
+        self.latent_layers = nn.Sequential(
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3)
+        )
         layers = []
         for i in range(num_layers - 1):
             if i == 0:
@@ -163,7 +172,15 @@ class TemplateUV(BaseNetwork):
         x = x.to(self.get_device(temp_device))
         if normalize:
             x = x / (x.norm(dim=-1, keepdim=True))
+        lt = self.latent_layers(self.latent_space).squeeze()
         h = self.positional_encoding(x)
+        sh = list(h.shape)
+        sh[-1] = 512
+        ltt = torch.ones((sh))
+        ltt[:] = lt
+        ltt = ltt.to(self.get_device(temp_device))
+        
+        h = torch.concat((h, ltt), -1)
         h = self.mlp(h)
         return (x + h).to(temp_device)
 
@@ -172,8 +189,17 @@ class DeltaUV(BaseNetwork):
     def __init__(
         self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10
     ):
-        input_size = L * 2 * input_size
+        input_size = (L * 2 * input_size) + 512
         super().__init__(n_harmonic_functions=L)
+        latent_space = np.load('data/mean_latent.npz')
+        self.latent_space = torch.from_numpy(latent_space['arr_0'])
+        self.latent_layers = nn.Sequential(
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3)
+        )
         layers = []
         for i in range(num_layers - 1):
             if i == 0:
@@ -190,8 +216,17 @@ class DeltaUV(BaseNetwork):
     def forward(self, x):
         temp_device = x.device
         x = x.to(self.get_device(temp_device))
-        x = self.positional_encoding(x)
-        x = self.mlp(x)
+        
+        lt = self.latent_layers(self.latent_space).squeeze()
+        h = self.positional_encoding(x)
+        sh = list(h.shape)
+        sh[-1] = 512
+        ltt = torch.ones((sh))
+        ltt[:] = lt
+        ltt = ltt.to(self.get_device(temp_device))
+        
+        h = torch.concat((h, ltt), -1)
+        x = self.mlp(h)
         return x.to(temp_device)
 
 
@@ -225,8 +260,19 @@ class ImplicitTextureNet(BaseNetwork):
                 "sigmoid".
             gain (float, optional): Gain for output activation to initialize near 0.5.
         """
-        input_size = input_size * L * 2
+        input_size = (input_size * L * 2) + 512
         super().__init__(n_harmonic_functions=L, omega0=0.1)
+        
+        latent_space = np.load('data/mean_latent.npz')
+        self.latent_space = torch.from_numpy(latent_space['arr_0'])
+        self.latent_layers = nn.Sequential(
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3, stride=2),
+            nn.MaxPool2d(3)
+        )
+
         self.num_layers = num_layers
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -273,8 +319,17 @@ class ImplicitTextureNet(BaseNetwork):
             x = x.to(self.get_device(temp_device))
             if normalize:
                 x = x / (x.norm(dim=-1, keepdim=True) + 1e-6)  # Project to sphere.
-            x = self.positional_encoding(x)
-            x = self.mlp(x)
+            
+            lt = self.latent_layers(self.latent_space).squeeze()
+            h = self.positional_encoding(x)
+            sh = list(h.shape)
+            sh[-1] = 512
+            ltt = torch.ones((sh))
+            ltt[:] = lt
+            ltt = ltt.to(self.get_device(temp_device))
+            
+            h = torch.concat((h, ltt), -1)
+            x = self.mlp(h)
             x = self.final_activation(x)
             x = x.to(temp_device)
         y = torch.ones(len(mask), self.output_size, device=temp_device)
@@ -354,10 +409,20 @@ class EnvironmentMap(ImplicitTextureNet):
 
         if normalize:
             x = x / (x.norm(dim=-1, keepdim=True) + 1e-6)  # Project to sphere.
-        x = self.positional_encoding(x)
+        
+        lt = self.latent_layers(self.latent_space).squeeze()
+        h = self.positional_encoding(x)
+        sh = list(h.shape)
+        sh[-1] = 512
+        ltt = torch.ones((sh))
+        ltt[:] = lt
+        ltt = ltt.to(self.get_device(temp_device))
+        
+        h = torch.concat((h, ltt), -1)
+        
         # We will let the environment map's lighting be non-negative unbounded,
         # initialized at 3 (~75% brightness).
-        x = torch.relu(self.mlp(x) + 3)
+        x = torch.relu(self.mlp(h) + 3)
         if self.use_single_channel:
             x = x.mean(dim=-1, keepdim=True)
             # x = x.repeat((1,) * (x.ndim - 1) + (3,))  # repeat last dimension 3x
