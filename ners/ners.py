@@ -678,6 +678,7 @@ class Ners(object):
                 if use_antialiasing:
                     images = [antialias(image) for image in images]
                 combined = (np.hstack(images) * 255).astype(np.uint8)
+                imageio.imwrite(f"{fname}_{azim[i]}.png", (images[1] * 255).astype(np.uint8))
                 writer.append_data(combined)
         writer.close()
 
