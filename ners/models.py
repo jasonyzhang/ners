@@ -143,16 +143,24 @@ class TemplateUV(BaseNetwork):
     def __init__(
         self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10
     ):
-        input_size = (L * 2 * input_size) + 512
+        input_size = (L * 2 * input_size) + 288
         super().__init__(n_harmonic_functions=L)
         latent_space = np.load('data/mean_latent.npz')
-        self.latent_space = torch.from_numpy(latent_space['arr_0'])
+        self.latent_space = torch.from_numpy(latent_space['arr_0']).unsqueeze(0).cuda()
         self.latent_layers = nn.Sequential(
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3)
+            nn.Conv2d(512, 256, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(256),
+            nn.Conv2d(256, 128, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.Conv2d(128, 64, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.Conv2d(64, 32, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(32),
+            nn.Flatten()
         )
         layers = []
         for i in range(num_layers - 1):
@@ -175,7 +183,7 @@ class TemplateUV(BaseNetwork):
         lt = self.latent_layers(self.latent_space).squeeze()
         h = self.positional_encoding(x)
         sh = list(h.shape)
-        sh[-1] = 512
+        sh[-1] = 288
         ltt = torch.ones((sh))
         ltt[:] = lt
         ltt = ltt.to(self.get_device(temp_device))
@@ -189,16 +197,24 @@ class DeltaUV(BaseNetwork):
     def __init__(
         self, num_layers=3, input_size=3, output_size=3, hidden_size=256, L=10
     ):
-        input_size = (L * 2 * input_size) + 512
+        input_size = (L * 2 * input_size) + 288
         super().__init__(n_harmonic_functions=L)
         latent_space = np.load('data/mean_latent.npz')
-        self.latent_space = torch.from_numpy(latent_space['arr_0'])
+        self.latent_space = torch.from_numpy(latent_space['arr_0']).unsqueeze(0).cuda()
         self.latent_layers = nn.Sequential(
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3)
+            nn.Conv2d(512, 256, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(256),
+            nn.Conv2d(256, 128, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.Conv2d(128, 64, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.Conv2d(64, 32, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(32),
+            nn.Flatten()
         )
         layers = []
         for i in range(num_layers - 1):
@@ -220,7 +236,7 @@ class DeltaUV(BaseNetwork):
         lt = self.latent_layers(self.latent_space).squeeze()
         h = self.positional_encoding(x)
         sh = list(h.shape)
-        sh[-1] = 512
+        sh[-1] = 288
         ltt = torch.ones((sh))
         ltt[:] = lt
         ltt = ltt.to(self.get_device(temp_device))
@@ -260,17 +276,25 @@ class ImplicitTextureNet(BaseNetwork):
                 "sigmoid".
             gain (float, optional): Gain for output activation to initialize near 0.5.
         """
-        input_size = (input_size * L * 2) + 512
+        input_size = (input_size * L * 2) + 288
         super().__init__(n_harmonic_functions=L, omega0=0.1)
         
         latent_space = np.load('data/mean_latent.npz')
-        self.latent_space = torch.from_numpy(latent_space['arr_0'])
+        self.latent_space = torch.from_numpy(latent_space['arr_0']).unsqueeze(0).cuda()
         self.latent_layers = nn.Sequential(
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3, stride=2),
-            nn.MaxPool2d(3)
+            nn.Conv2d(512, 256, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(256),
+            nn.Conv2d(256, 128, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(128),
+            nn.Conv2d(128, 64, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(64),
+            nn.Conv2d(64, 32, kernel_size=3, stride=2),
+            nn.ReLU(),
+            nn.BatchNorm2d(32),
+            nn.Flatten()
         )
 
         self.num_layers = num_layers
@@ -323,7 +347,7 @@ class ImplicitTextureNet(BaseNetwork):
             lt = self.latent_layers(self.latent_space).squeeze()
             h = self.positional_encoding(x)
             sh = list(h.shape)
-            sh[-1] = 512
+            sh[-1] = 288
             ltt = torch.ones((sh))
             ltt[:] = lt
             ltt = ltt.to(self.get_device(temp_device))
@@ -413,7 +437,7 @@ class EnvironmentMap(ImplicitTextureNet):
         lt = self.latent_layers(self.latent_space).squeeze()
         h = self.positional_encoding(x)
         sh = list(h.shape)
-        sh[-1] = 512
+        sh[-1] = 288
         ltt = torch.ones((sh))
         ltt[:] = lt
         ltt = ltt.to(self.get_device(temp_device))
