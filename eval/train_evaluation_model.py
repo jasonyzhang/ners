@@ -58,6 +58,9 @@ def get_parser():
     parser.add_argument("--num-iterations-texture", default=3000, type=int)
     parser.add_argument("--num-iterations-radiance", default=500, type=int)
     parser.add_argument("--num-layers-tex", default=12, type=int)
+    parser.add_argument(
+        "--L", default=10, type=int, help="Number of bases for positional encoding."
+    )
     return parser
 
 
@@ -120,6 +123,7 @@ def main(
     num_iterations_texture,
     num_iterations_radiance,
     num_layers_tex,
+    L,
     force=False,
 ):
     instance_dir = osp.join(data_dir, instance_id)
@@ -169,31 +173,16 @@ def main(
         num_layers_tex=num_layers_tex,
         num_layers_env=4,
         f_template=f_template,
+        L=L,
     )
     ners.cameras_current = cameras_training.to(ners.device)
-    ners.visualize_input_views(
-        filename=osp.join(output_dir, f"1_initial_cameras.jpg"),
-    )
     if fix_cameras:
         ners.finetune_camera = False
     else:
         ners.optimize_camera(num_iterations_camera)
-        ners.visualize_input_views(
-            filename=osp.join(output_dir, f"2_optimize_cameras.jpg"),
-        )
-
     ners.optimize_shape(num_iterations_shape)
-    ners.visualize_input_views(
-        filename=osp.join(output_dir, f"3_shape.jpg"),
-    )
     ners.optimize_texture(num_iterations_texture)
-    ners.visualize_input_views(
-        filename=osp.join(output_dir, f"4_texture.jpg"),
-    )
     ners.optimize_radiance(num_iterations_radiance)
-    ners.visualize_input_views(
-        filename=osp.join(output_dir, f"5_rad.jpg"),
-    )
     target_image = render_target_view(ners, cameras_target, image_size=256)
     plt.imsave(render_path, target_image)
     ners.save_parameters(weights_path)
