@@ -3,6 +3,7 @@
 [[`arXiv`](https://arxiv.org/abs/2110.07604)]
 [[`Project Page`](https://jasonyzhang.com/ners/)]
 [[`Colab Demo`](https://colab.research.google.com/drive/1L4Sl_9Osc2J_I5YpkteLrb-VbnwdDokd?usp=sharing)]
+[[`MVMC Data`](https://drive.google.com/file/d/1P7BhDyUPhf4IF2FOWwddztYvjtIxR3II/view?usp=sharing)]
 [[`Bibtex`](#CitingNeRS)]
 
 This repo contains the code for NeRS: Neural Reflectance Surfaces.
@@ -127,6 +128,10 @@ python -m scripts.pretrain_shape_template \
     --sphere-mesh models/meshes/car_sphere.obj \
     --output-path models/templates/car.pth
 ```
+
+## Evaluation
+
+Please see [eval.md](eval.md) for evaluation instructions.
 
 ## <a name="CitingNeRS"></a>Citing NeRS
 

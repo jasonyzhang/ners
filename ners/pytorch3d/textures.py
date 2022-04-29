@@ -65,7 +65,7 @@ def compute_lighting_specular(
         similarity = torch.relu(dot_product(R, V_))  # (B, N2, 1)
         del R
         weight = specularity_ * (shininess_ + 1) / (2 * np.pi)  # (B, 1, 1)
-        light = weight * similarity ** shininess_  # (B, 1, 1)
+        light = weight * similarity**shininess_  # (B, 1, 1)
         del similarity
         light = (light * E).sum(dim=1) / num_rays
         lights.append(light)

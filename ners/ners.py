@@ -116,6 +116,7 @@ class Ners(object):
         self.images_masked = images_masked
         self.jitter_uv = jitter_uv
         self.mean_texture = None
+        self.finetune_camera = True
 
         self.renderer_textured, self.renderer_silhouette = get_renderers(device=device)
 
@@ -350,10 +351,13 @@ class Ners(object):
         R = geom_util.matrix_to_rot6d(self.cameras_current.R.detach())
         T = self.cameras_current.T.detach()
         fov = self.fov.clone().detach()
-        params = [R, T, fov]
-        for param in params:
-            param.requires_grad = True
-        parameters = [{"params": params, "lr": lr * 10}]
+        if self.finetune_camera:
+            params = [R, T, fov]
+            for param in params:
+                param.requires_grad = True
+            parameters = [{"params": params, "lr": lr * 10}]
+        else:
+            parameters = []
         parameters.append({"params": self.f_shape.parameters(), "lr": lr})
 
         optim = torch.optim.Adam(parameters)
@@ -397,10 +401,13 @@ class Ners(object):
         R = geom_util.matrix_to_rot6d(self.cameras_current.R.detach())
         T = self.cameras_current.T.detach()
         fov = self.fov.clone().detach()
-        params = [R, T, fov]
-        for param in params:
-            param.requires_grad = True
-        parameters = [{"params": params, "lr": lr * 10}]
+        if self.finetune_camera:
+            params = [R, T, fov]
+            for param in params:
+                param.requires_grad = True
+            parameters = [{"params": params, "lr": lr * 10}]
+        else:
+            parameters = []
         parameters.append({"params": self.f_shape.parameters(), "lr": lr})
         parameters.append({"params": self.f_tex.parameters(), "lr": lr})
 
@@ -457,7 +464,9 @@ class Ners(object):
         R = geom_util.matrix_to_rot6d(self.cameras_current.R.detach())
         T = self.cameras_current.T.detach()
         fov = self.fov.clone().detach()
-        params = [R, T, fov, self.specularity, self.shininess]
+        params = [self.specularity, self.shininess]
+        if self.finetune_camera:
+            params.extend([R, T, fov])
         for param in params:
             param.requires_grad = True
         parameters = [{"params": params, "lr": lr * 10}]
@@ -622,8 +631,6 @@ class Ners(object):
                 azim=azim,
                 device=self.device,
             )
-            # TODO: Fix the pose of the original car.
-            # new_R = self.R_init @ R
             new_R = R
             loop = tqdm(range(num_frames), "Video") if pbar else range(num_frames)
             for i in loop:

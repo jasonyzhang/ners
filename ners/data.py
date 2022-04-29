@@ -80,7 +80,10 @@ def load_data_from_dir(instance_dir, image_size=256, pad_size=0.1, skip_indices=
 
 
 def load_car_data(
-    instance_dir, use_optimized_cameras=True, image_size=256, pad_size=0.1
+    instance_dir,
+    use_optimized_cameras=True,
+    image_size=256,
+    pad_size=0.1,
 ):
     """
     Processes instance of car dataset for NeRS optimization.
