@@ -55,9 +55,9 @@ def get_parser():
     # Hyperparameters
     parser.add_argument("--num-iterations-camera", default=500, type=int)
     parser.add_argument("--num-iterations-shape", default=500, type=int)
-    parser.add_argument("--num-iterations-texture", default=1000, type=int)
+    parser.add_argument("--num-iterations-texture", default=3000, type=int)
     parser.add_argument("--num-iterations-radiance", default=500, type=int)
-    parser.add_argument("--num-layers-tex", default=8, type=int)
+    parser.add_argument("--num-layers-tex", default=12, type=int)
     return parser
 
 

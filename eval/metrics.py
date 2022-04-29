@@ -1,8 +1,12 @@
-import cleanfid
+import os.path as osp
+import shutil
+import tempfile
+
 import lpips
 import numpy as np
 import skimage
 import torch
+from cleanfid import fid
 
 LPIPS_NET = lpips.LPIPS(net="alex", verbose=False, pretrained=True)
 
@@ -58,7 +62,6 @@ def compute_ssim(image_gt, image_pred):
         im2=image_pred,
         data_range=1,
         channel_axis=2,
-        # multichannel=True,
     )
 
 
@@ -76,15 +79,26 @@ def compute_mse(image_gt, image_pred):
     return np.mean((image_gt - image_pred) ** 2)
 
 
-def compute_fid(directory_gt, directory_pred):
+def compute_fid(image_paths_gt, image_paths_pred):
     """
     Compute the FID between two directories.
 
     Args:
-        directory_gt (str): The directory containing the ground truth images.
-        directory_pred (str): The directory containing the predicted images.
+        image_paths_gt (list): List of image paths corresponding to ground truth images.
+        image_paths_pred (list): List of image paths corresponding to predicted images.
 
     Returns:
         float: FID.
     """
-    return cleanfid.compute_fid(directory_gt, directory_pred)
+    dir_gt = tempfile.TemporaryDirectory()
+    dir_pred = tempfile.TemporaryDirectory()
+    for i, image_path in enumerate(image_paths_gt):
+        filename = f"{i:06d}_{osp.basename(image_path)}"
+        shutil.copy(image_path, osp.join(dir_gt.name, filename))
+    for i, image_path in enumerate(image_paths_pred):
+        filename = f"{i:06d}_{osp.basename(image_path)}"
+        shutil.copy(image_path, osp.join(dir_pred.name, filename))
+    fid_score = fid.compute_fid(dir_gt.name, dir_pred.name, verbose=False)
+    dir_gt.cleanup()
+    dir_pred.cleanup()
+    return fid_score

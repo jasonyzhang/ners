@@ -67,9 +67,11 @@ def get_parser():
 def evaluate(eval_dir, gt_name, pred_name, print_per_instance=False):
     instance_ids = os.listdir(eval_dir)
 
-    print(f"{'Name':12s} {'MSE':>6s} {'PSNR':>6s} {'SSIM':>6s} {'LPIPS':>6s}")
+    print(f"{'Name':12s} {'MSE':>6s} {'PSNR':>6s} {'SSIM':>6s} {'LPIPS':>6s} {'FID':>6s}")
 
     all_metrics = {"mse": [], "psnr": [], "ssim": [], "lpips": []}
+    image_paths_gt = []
+    image_paths_pred = []
     for instance_id in instance_ids:
         gt_dir = osp.join(eval_dir, instance_id, gt_name)
         pred_dir = osp.join(eval_dir, instance_id, pred_name)
@@ -77,6 +79,8 @@ def evaluate(eval_dir, gt_name, pred_name, print_per_instance=False):
             continue
         gt_images = sorted(glob(osp.join(gt_dir, "*.png")))
         pred_images = sorted(glob(osp.join(pred_dir, "*.png")))
+        image_paths_gt.extend(gt_images)
+        image_paths_pred.extend(pred_images)
         assert len(gt_images) == len(pred_images)
         metrics = {
             "mse": [],
@@ -101,8 +105,10 @@ def evaluate(eval_dir, gt_name, pred_name, print_per_instance=False):
         if print_per_instance:
             metrics_str = " ".join(["{0:>#6.3g}".format(v) for v in metrics.values()])
             print(f"{instance_id:12s} {metrics_str}")
+    
+    fid = compute_fid(image_paths_gt, image_paths_pred)
     metrics_str = " ".join(
-        ["{0:>#6.3g}".format(np.mean(v)) for v in all_metrics.values()]
+        ["{0:>#6.3g}".format(np.mean(v)) for v in all_metrics.values()] + [f"{fid:>#6.3g}"]
     )
     print(f"{pred_name:12s} {metrics_str}")
 
