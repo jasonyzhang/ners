@@ -15,6 +15,9 @@ Train a model for instance id 7251103879 with camera index 0 held out using the
 python -m eval.train_evaluation_model --data_dir data/evaluation \
     --instance-id 7251103879 --camera-index 0 --camera-type camera_pretrained
 
+
+**Note**: Currently, the in-the-wild target camera is not being finetuned w.r.t. the
+target image.
 """
 import argparse
 import json
