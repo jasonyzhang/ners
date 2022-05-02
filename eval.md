@@ -54,4 +54,10 @@ python -m eval.train_evaluation_model --data_dir data/evaluation \
     --instance-id 7251103879 --camera-index 0 --camera-type camera_pretrained
 ```
 
-Note that one model must be trained for each camera index for each instance.
+Note that one model must be trained for each camera index for each instance. This process can be automated by running:
+
+```
+python -m eval.eval_driver --data-dir data/evaluation --evaluation-mode fixed
+
+python -m eval.eval_driver --data-dir data/evaluation --evaluation-mode in-the-wild
+```
