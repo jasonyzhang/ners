@@ -4,7 +4,7 @@
 [[`Project Page`](https://jasonyzhang.com/ners/)]
 [[`Colab Demo`](https://colab.research.google.com/drive/1L4Sl_9Osc2J_I5YpkteLrb-VbnwdDokd?usp=sharing)]
 [[`MVMC Data`](https://drive.google.com/file/d/1P7BhDyUPhf4IF2FOWwddztYvjtIxR3II/view?usp=sharing)]
-[[`Bibtex`](#CitingNeRS)]
+[[`Bibtex`](#citing-ners)]
 
 This repo contains the code for NeRS: Neural Reflectance Surfaces.
 
